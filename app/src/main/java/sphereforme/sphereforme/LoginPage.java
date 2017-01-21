@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import java.net.HttpCookie;
 import java.net.URLEncoder;
 
 public class LoginPage extends AppCompatActivity {
@@ -24,11 +25,18 @@ public class LoginPage extends AppCompatActivity {
             GlobalAssets.Global_Instance = new GlobalAssets(this);
         }
         GlobalAssets.Global_Instance.preferences_read();
+
+        for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().getCookies()){
+            if (cookie.getName().equals(GlobalAssets.Cookie_Session_NAME)) {
+                Intent intent = new Intent(this,MainPage.class);
+                startActivity(intent);
+            }
+        }
     }
 
     public void login_submit(View view) {
-        String username = (String) ((EditText) findViewById(R.id.username)).getText().toString();
-        String password = (String) ((EditText) findViewById(R.id.password)).getText().toString();
+        String username = ((EditText) findViewById(R.id.username)).getText().toString();
+        String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
         if (username.equals("") || password.equals("")) {
             GlobalAssets.create_alert(this,"Empty Fields", "Fill all the fields.");

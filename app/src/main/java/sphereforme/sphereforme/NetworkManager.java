@@ -40,7 +40,7 @@ public class NetworkManager extends AsyncTask<String, Void, String> {
                 urlConnection.setRequestProperty("Cookie",
                         TextUtils.join(";", GlobalAssets.msCookieManager.getCookieStore().getCookies()));
             }
-            
+
             urlConnection.setRequestMethod("POST");
             urlConnection.setDoOutput(true);
 

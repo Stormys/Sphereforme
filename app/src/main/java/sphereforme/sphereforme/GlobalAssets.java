@@ -12,7 +12,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class GlobalAssets {
     public static java.net.CookieManager msCookieManager = new java.net.CookieManager();
     public static GlobalAssets Global_Instance = null;
-    public static final String Cookies_FILE_NAME = "Cookies";
+    private static final String Cookies_FILE_NAME = "Cookies";
+    public static final String Cookie_Session_NAME = "SessionToken";
 
     private Context thisContext;
 
@@ -35,7 +36,7 @@ public class GlobalAssets {
 
     public void preferences_read() {
         SharedPreferences prefs = thisContext.getSharedPreferences(Cookies_FILE_NAME, MODE_PRIVATE);
-        String restoredText = prefs.getString("SessionKey", null);
+        String restoredText = prefs.getString(Cookie_Session_NAME, null);
         if (restoredText != null) {
             msCookieManager.getCookieStore().add(null, HttpCookie.parse(restoredText).get(0));
         }
@@ -43,14 +44,14 @@ public class GlobalAssets {
 
     public void preferences_save(String key) {
         SharedPreferences.Editor editor = thisContext.getSharedPreferences(Cookies_FILE_NAME, MODE_PRIVATE).edit();
-        editor.putString("SessionKey", key);
-        editor.commit();
+        editor.putString(Cookie_Session_NAME, key);
+        editor.apply();
     }
 
     public void clear_preferences() {
         SharedPreferences.Editor editor = thisContext.getSharedPreferences(Cookies_FILE_NAME, MODE_PRIVATE).edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
         msCookieManager.getCookieStore().removeAll();
     }
 }
