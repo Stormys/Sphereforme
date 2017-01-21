@@ -20,6 +20,19 @@ public class GlobalAssets {
         thisContext = base;
     }
 
+    public static void create_alert(Context currentContext,String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(currentContext).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
     public void preferences_read() {
         SharedPreferences prefs = thisContext.getSharedPreferences(Cookies_FILE_NAME, MODE_PRIVATE);
         String restoredText = prefs.getString("SessionKey", null);
@@ -34,16 +47,10 @@ public class GlobalAssets {
         editor.commit();
     }
 
-    public static void create_alert(Context currentContext,String title, String message) {
-        AlertDialog alertDialog = new AlertDialog.Builder(currentContext).create();
-        alertDialog.setTitle(title);
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+    public void clear_preferences() {
+        SharedPreferences.Editor editor = thisContext.getSharedPreferences(Cookies_FILE_NAME, MODE_PRIVATE).edit();
+        editor.clear();
+        editor.commit();
+        msCookieManager.getCookieStore().removeAll();
     }
 }

@@ -49,7 +49,6 @@ public class LoginPage extends AppCompatActivity {
 
         @Override
         public void onTaskComplete(String result) {
-            System.out.println("one" + result);
             JSONObject json_result = null;
             String success = null, message = null;
             try {
