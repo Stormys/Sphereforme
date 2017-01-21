@@ -101,7 +101,7 @@
         android:layout_alignEnd="@+id/signinbutton"
         android:layout_marginEnd="14dp"
         android:textColor="?attr/colorAccent"
-        android:onClick="SignUpButton"/>
+        android:onClick="go_to_signup"/>
 
     <TextView
         android:text="Don't have an account?"

@@ -29,6 +29,7 @@ public class LoginPage extends AppCompatActivity {
         for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().getCookies()){
             if (cookie.getName().equals(GlobalAssets.Cookie_Session_NAME)) {
                 Intent intent = new Intent(this,MainPage.class);
+                finish();
                 startActivity(intent);
             }
         }
@@ -51,6 +52,11 @@ public class LoginPage extends AppCompatActivity {
         }
 
         new LoginTask().launchTask("http://35.165.40.110/login",urlParameters);
+    }
+
+    public void go_to_signup(View view) {
+        Intent intent = new Intent(this,RegisterPage.class);
+        startActivity(intent);
     }
 
     private class LoginTask implements AsyncTaskCompleteListener<String> {

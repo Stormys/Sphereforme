@@ -76,7 +76,7 @@ public class NetworkManager extends AsyncTask<String, Void, String> {
 
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error " + e.getMessage());
             return e.getMessage();
         }
         return resultToDisplay;

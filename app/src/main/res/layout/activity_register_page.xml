@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Last Name"
+        android:ems="10"
+        android:id="@+id/lastName"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/firstName"
+        android:layout_alignStart="@+id/firstName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Email Address"
+        android:ems="10"
+        android:id="@+id/emailAddress"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_marginTop="24dp"
+        android:layout_below="@+id/lastName"
+        android:layout_alignStart="@+id/lastName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Username"
+        android:ems="10"
+        android:id="@+id/username"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_below="@+id/emailAddress"
+        android:layout_alignStart="@+id/emailAddress"
+        android:layout_marginTop="19dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Password"
+        android:ems="10"
+        android:id="@+id/password"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/username"
+        android:layout_alignStart="@+id/username" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="Confirm Password"
+        android:ems="10"
+        android:id="@+id/confirm"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_marginTop="19dp"
+        android:layout_below="@+id/password"
+        android:layout_alignStart="@+id/password" />
+
+    <Button
+        android:text="Sign Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:id="@+id/signup"
+        android:background="#E24E42"
+        android:layout_below="@+id/confirm"
+        android:layout_alignStart="@+id/confirm"
+        android:layout_alignEnd="@+id/confirm"
+        android:onClick="submit_signup"/>
+
+    <TextView
+        android:text="Already have an account?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/haveaccount"
+        android:textSize="16sp"
+        android:layout_marginBottom="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/titlex"
+        android:layout_marginEnd="12dp" />
+
+    <TextView
+        android:text="Sign In"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signin"
+        android:textSize="16sp"
+        android:layout_alignBaseline="@+id/haveaccount"
+        android:layout_alignBottom="@+id/haveaccount"
+        android:layout_toEndOf="@+id/haveaccount"
+        android:textStyle="normal|bold" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:hint="First Name"
+        android:ems="10"
+        android:id="@+id/firstName"
+        android:textColor="@android:color/darker_gray"
+        android:outlineProvider="background"
+        android:textSize="24sp"
+        android:layout_marginTop="44dp"
+        android:layout_alignTop="@+id/titlex"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Create an account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titlex"
+        android:textSize="26sp"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="23dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/firstName" />
+
+</RelativeLayout>
