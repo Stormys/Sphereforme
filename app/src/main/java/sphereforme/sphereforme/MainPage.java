@@ -20,6 +20,11 @@ public class MainPage extends AppCompatActivity {
         new LogoutTask().launchTask("http://35.165.40.110/logout","");
     }
 
+    public void go_to_scanner(View view) {
+        Intent intent = new Intent(this, QrScanner.class);
+        startActivity(intent);
+    }
+
     private class LogoutTask implements AsyncTaskCompleteListener<String> {
         @Override
         public void onTaskComplete(String result) {

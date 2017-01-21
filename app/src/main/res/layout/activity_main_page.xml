@@ -11,9 +11,20 @@
     tools:context="sphereforme.sphereforme.MainPage">
 
     <Button
-        android:text="Button"
+        android:text="Logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
-        android:onClick="logout" />
+        android:onClick="logout"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="64dp" />
+
+    <Button
+        android:text="Scan QR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/button"
+        android:onClick="go_to_scanner" />
 </RelativeLayout>
