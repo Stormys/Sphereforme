@@ -10,11 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="sphereforme.sphereforme.QrScanner">
 
-    <SurfaceView
-        android:layout_width="640px"
-        android:layout_height="480px"
-        android:id="@+id/camera_view"
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="119dp" />
+        android:layout_marginBottom="58dp"
+        android:id="@+id/barcodeInfo" />
+
+    <SurfaceView
+        android:layout_width="1000px"
+        android:layout_height="1000px"
+        android:id="@+id/camera_view"
+        android:layout_above="@+id/barcodeInfo"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="109dp" />
 </RelativeLayout>
