@@ -28,9 +28,7 @@ public class LoginPage extends AppCompatActivity {
 
         for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().getCookies()){
             if (cookie.getName().equals(GlobalAssets.Cookie_Session_NAME)) {
-                Intent intent = new Intent(this,MainPage.class);
-                finish();
-                startActivity(intent);
+                go_to_main_page();
             }
         }
     }
@@ -59,6 +57,12 @@ public class LoginPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void go_to_main_page() {
+        Intent intent = new Intent(this,QrScanner.class);
+        finish();
+        startActivity(intent);
+    }
+
     private class LoginTask implements AsyncTaskCompleteListener<String> {
 
         @Override
@@ -76,8 +80,7 @@ public class LoginPage extends AppCompatActivity {
             } else if (success == null && message == null) {
                 GlobalAssets.create_alert(LoginPage.this,"Error","Something bad happen.");
             } else if (success.equals("Yes") && message.equals("Successfully logged in")) {
-                Intent intent = new Intent(LoginPage.this, MainPage.class);
-                startActivity(intent);
+                go_to_main_page();
             } else {
                 GlobalAssets.create_alert(LoginPage.this,"Error","Something bad happen.");
             }

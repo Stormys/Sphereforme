@@ -3,6 +3,7 @@ package sphereforme.sphereforme;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,8 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -44,10 +47,24 @@ public class QrScanner extends AppCompatActivity {
 
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
 
-        cameraSource = new CameraSource.Builder(this, barcodeDetector).setRequestedPreviewSize(1600, 1024).build();
+        cameraSource = new CameraSource.Builder(this, barcodeDetector).setAutoFocusEnabled(true).setRequestedPreviewSize(4096, 1716).build();
 
         set_up_camera_with_surface_view();
         set_up_barcode_dectector();
+    }
+
+    public void hold_to_scan(View view) {
+
+    }
+
+    public void go_to_settings(View view) {
+        Intent intent = new Intent(this,SettingsPage.class);
+        startActivity(intent);
+    }
+
+    public void go_to_contact_book(View view) {
+        Intent intent = new Intent(this,ContactBook.class);
+        startActivity(intent);
     }
 
     private void set_up_camera_with_surface_view() {
@@ -88,9 +105,7 @@ public class QrScanner extends AppCompatActivity {
                 if (barcodes.size() != 0) {
                     barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
                         public void run() {
-                            barcodeInfo.setText(    // Update the TextView
-                                    barcodes.valueAt(0).displayValue
-                            );
+                                    found_qr_code(barcodes.valueAt(0).displayValue);
                         }
                     });
                 }
@@ -127,5 +142,36 @@ public class QrScanner extends AppCompatActivity {
         super.onDestroy();
         cameraSource.release();
         barcodeDetector.release();
+    }
+
+    private void found_qr_code(String data) {
+        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("New Contact");
+        alertDialog.setMessage("Do you want to add " + data + "?");
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }            });
+        alertDialog.show();
+    }
+
+    private class Qr_Add implements AsyncTaskCompleteListener<String> {
+
+        @Override
+        public void onTaskComplete(String result) {
+        }
+
+        @Override
+        public void launchTask(String url, String urlParameters) {
+            NetworkManager NetworkConnection = new NetworkManager(this);
+            NetworkConnection.execute(url, urlParameters);
+        }
     }
 }
