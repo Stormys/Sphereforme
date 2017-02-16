@@ -1,20 +1,26 @@
 package sphereforme.sphereforme;
 
 import android.Manifest;
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.android.gms.vision.CameraSource;
@@ -25,6 +31,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
@@ -35,7 +42,10 @@ public class QrScanner extends AppCompatActivity {
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private SurfaceView cameraView;
-    private TextView barcodeInfo;
+
+    private String scanned_qr_data;
+
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +53,42 @@ public class QrScanner extends AppCompatActivity {
         setContentView(R.layout.activity_qr_scanner);
 
         cameraView = (SurfaceView)findViewById(R.id.camera_view);
-        barcodeInfo = (TextView)findViewById(R.id.barcodeInfo);
-
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
 
         cameraSource = new CameraSource.Builder(this, barcodeDetector).setAutoFocusEnabled(true).setRequestedPreviewSize(4096, 1716).build();
 
         set_up_camera_with_surface_view();
         set_up_barcode_dectector();
+
+       // Qr temp = new Qr();
+        //temp.findBitmap(this);
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                    String s = intent.getStringExtra("Name");
+                alert_adding_user(s);
+            }
+        };
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
+                new IntentFilter("com.sphereforme.add")
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        super.onStop();
     }
 
     public void hold_to_scan(View view) {
-
+        findViewById(R.id.profile_overlay).setVisibility(View.INVISIBLE);
     }
 
     public void go_to_settings(View view) {
@@ -103,11 +137,10 @@ public class QrScanner extends AppCompatActivity {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
                 if (barcodes.size() != 0) {
-                    barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
-                        public void run() {
-                                    found_qr_code(barcodes.valueAt(0).displayValue);
-                        }
-                    });
+                    scanned_qr_data = barcodes.valueAt(0).displayValue;
+                    found_qr_code(scanned_qr_data);
+                    this.release();
+                    cameraSource.stop();
                 }
             }
         });
@@ -145,9 +178,17 @@ public class QrScanner extends AppCompatActivity {
     }
 
     private void found_qr_code(String data) {
-        AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        try {
+            new Qr_Add_Query().launchTask("http://35.165.40.110/qr_check", "username=" + URLEncoder.encode(data, "UTF-8"));
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void alert_adding_user(String name) {
+        AlertDialog alertDialog = new AlertDialog.Builder(QrScanner.this).create();
         alertDialog.setTitle("New Contact");
-        alertDialog.setMessage("Do you want to add " + data + "?");
+        alertDialog.setMessage("Do you want to add " + name + "?");
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -157,15 +198,37 @@ public class QrScanner extends AppCompatActivity {
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }            });
+                        try {
+                            new Qr_ADD().launchTask("http://35.165.40.110/qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
         alertDialog.show();
     }
 
-    private class Qr_Add implements AsyncTaskCompleteListener<String> {
+    private class Qr_Add_Query implements AsyncTaskCompleteListener<String> {
 
         @Override
         public void onTaskComplete(String result) {
+            JSONObject json_result = null;
+            String success = null, message = null;
+            try {
+                json_result = new JSONObject(result);
+                success = json_result.getString("success");
+                message = json_result.getString("message");
+            } catch (Exception e) {
+            }
+            if (success == null && message == null && result.equals("Unauthorized")) {
+                GlobalAssets.create_alert(QrScanner.this,"Not Authorized","Not Authorized");
+            } else if (success == null && message == null) {
+                GlobalAssets.create_alert(QrScanner.this,"Error","Something bad happen.");
+            } else if (success.equals("Yes")) {
+                alert_adding_user(message);
+            } else {
+                GlobalAssets.create_alert(QrScanner.this,"Error",message);
+            }
         }
 
         @Override
@@ -174,4 +237,34 @@ public class QrScanner extends AppCompatActivity {
             NetworkConnection.execute(url, urlParameters);
         }
     }
+
+    private class Qr_ADD implements AsyncTaskCompleteListener<String> {
+
+        @Override
+        public void onTaskComplete(String result) {
+            JSONObject json_result = null;
+            String success = null, message = null;
+            try {
+                json_result = new JSONObject(result);
+                success = json_result.getString("success");
+                message = json_result.getString("message");
+            } catch (Exception e) {
+            }
+            if (success == null && message == null && result.equals("Unauthorized")) {
+                GlobalAssets.create_alert(QrScanner.this,"Not Authorized","Not Authorized");
+            } else if (success == null && message == null) {
+                GlobalAssets.create_alert(QrScanner.this,"Error","Something bad happen.");
+            } else if (success.equals("Yes")) {
+                Toast.makeText(QrScanner.this, message, Toast.LENGTH_SHORT).show();
+            } else
+                GlobalAssets.create_alert(QrScanner.this,"Error",message);
+        }
+
+        @Override
+        public void launchTask(String url, String urlParameters) {
+            NetworkManager NetworkConnection = new NetworkManager(this);
+            NetworkConnection.execute(url, urlParameters);
+        }
+    }
+
 }

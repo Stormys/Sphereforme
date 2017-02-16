@@ -4,6 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <permission
+        android:name="sphereforme.sphereforme.permission.PUSH_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission
+        android:name="sphereforme.sphereforme.permission.PUSH_MESSAGE" />
 
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -15,6 +21,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name=".TokenRefreshListenerService"
+            android:exported="false">
+        <intent-filter>
+            <action android:name="com.google.firebase.INSTANCE_ID" />
+        </intent-filter>
+        </service>
+        <service
+            android:name=".NotificationsListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
+
+
         <activity android:name=".LoginPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

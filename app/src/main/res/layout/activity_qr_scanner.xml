@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_qr_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="sphereforme.sphereforme.QrScanner">
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="58dp"
-        android:id="@+id/barcodeInfo" />
 
     <SurfaceView
         android:layout_width="match_parent"
@@ -20,32 +13,38 @@
         android:id="@+id/camera_view" />
 
     <Button
+        android:text="Contacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button6"
+        android:onClick="go_to_contact_book"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/button2"
+        android:layout_marginEnd="22dp" />
+
+    <Button
         android:text="Hold to Scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button2"
-        android:layout_alignTop="@+id/barcodeInfo"
-        android:layout_centerHorizontal="true"
-        android:onClick="hold_to_scan"/>
+        android:onClick="hold_to_scan"
+        android:layout_marginEnd="119dp"
+        android:layout_alignBaseline="@+id/button6"
+        android:layout_alignBottom="@+id/button6"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:text="Settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button3"
+        android:onClick="go_to_settings"
         android:layout_alignBaseline="@+id/button2"
         android:layout_alignBottom="@+id/button2"
-        android:layout_toEndOf="@+id/button2"
-        android:layout_marginStart="17dp"
-        android:onClick="go_to_settings"/>
+        android:layout_alignParentEnd="true" />
 
-    <Button
-        android:text="Contacts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/barcodeInfo"
-        android:layout_toStartOf="@+id/button2"
-        android:layout_marginEnd="19dp"
-        android:id="@+id/button6"
-        android:onClick="go_to_contact_book"/>
+    <include layout="@layout/profile_overlay"
+        android:id="@+id/profile_overlay"/>
+
 </RelativeLayout>

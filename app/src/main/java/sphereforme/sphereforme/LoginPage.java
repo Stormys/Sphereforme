@@ -24,6 +24,7 @@ public class LoginPage extends AppCompatActivity {
         if (GlobalAssets.Global_Instance == null) {
             GlobalAssets.Global_Instance = new GlobalAssets(this);
         }
+
         GlobalAssets.Global_Instance.preferences_read();
 
         for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().getCookies()){
@@ -58,6 +59,9 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void go_to_main_page() {
+        Intent i = new Intent(this, TokenRefreshListenerService.class);
+        startService(i);
+
         Intent intent = new Intent(this,QrScanner.class);
         finish();
         startActivity(intent);
