@@ -60,14 +60,17 @@ public class QrScanner extends AppCompatActivity {
         set_up_camera_with_surface_view();
         set_up_barcode_dectector();
 
-       // Qr temp = new Qr();
-        //temp.findBitmap(this);
+        Qr temp = new Qr();
+        temp.findBitmap(this);
 
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (intent.getStringExtra("client_message").equals("1")) {
                     String s = intent.getStringExtra("Name");
-                alert_adding_user(s);
+                    scanned_qr_data = intent.getStringExtra("Qr_Data");
+                    alert_friend_request(s);
+                }
             }
         };
 
@@ -77,7 +80,7 @@ public class QrScanner extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
-                new IntentFilter("com.sphereforme.add")
+                new IntentFilter("1")
         );
     }
 
@@ -189,6 +192,29 @@ public class QrScanner extends AppCompatActivity {
         AlertDialog alertDialog = new AlertDialog.Builder(QrScanner.this).create();
         alertDialog.setTitle("New Contact");
         alertDialog.setMessage("Do you want to add " + name + "?");
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            new Qr_ADD().launchTask("http://35.165.40.110/qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
+                        } catch (Exception e) {
+
+                        }
+                    }
+                });
+        alertDialog.show();
+    }
+
+    private void alert_friend_request(String name) {
+        AlertDialog alertDialog = new AlertDialog.Builder(QrScanner.this).create();
+        alertDialog.setTitle("New Contact");
+        alertDialog.setMessage(name + " has added you. Would you like to add them back?");
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

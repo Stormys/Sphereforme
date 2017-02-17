@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "732923142156",
+    "firebase_url": "https://sphereforme.firebaseio.com",
+    "project_id": "sphereforme",
+    "storage_bucket": "sphereforme.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732923142156:android:8d15947ac641b1ff",
+        "android_client_info": {
+          "package_name": "sphereforme.sphereforme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732923142156-o95t60pgq73ncvogkcv03m4tvm9too0l.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "732923142156-5i41klhln8efuq878gc4lmr9pe077qni.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCViTMOHUvV7nVRGyOqKc0lapPFvZ5A_80"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

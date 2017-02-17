@@ -16,10 +16,6 @@ import java.net.URLEncoder;
 
 public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     @Override
-    public void onCreate() {
-        onTokenRefresh();
-    }
-    @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("Julian", "Refreshed token: " + refreshedToken);
@@ -38,7 +34,7 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
 
         @Override
         public void onTaskComplete(String result) {
-            System.out.print(result);
+
         }
 
         @Override
