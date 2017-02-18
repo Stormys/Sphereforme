@@ -38,17 +38,13 @@ import sphereforme.sphereforme.R;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
-public class QrScanner extends AppCompatActivity {
+public class QrScanner extends BaseActivity {
 
     private final int Camera_Permissions = 2;
 
     private BarcodeDetector barcodeDetector;
     private CameraSource cameraSource;
     private SurfaceView cameraView;
-
-    private String scanned_qr_data;
-
-    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,45 +61,6 @@ public class QrScanner extends AppCompatActivity {
 
         Qr.set_QR(this);
 
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getStringExtra("client_message").equals("1")) {
-                    String s = intent.getStringExtra("Name");
-                    scanned_qr_data = intent.getStringExtra("Qr_Data");
-                    alert_friend_request(s);
-                }
-            }
-        };
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
-                new IntentFilter("1")
-        );
-    }
-
-    @Override
-    protected void onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        super.onStop();
-    }
-
-    public void hold_to_scan(View view) {
-        findViewById(R.id.profile_overlay).setVisibility(View.INVISIBLE);
-    }
-
-    public void go_to_settings(View view) {
-        Intent intent = new Intent(this,SettingsPage.class);
-        startActivity(intent);
-    }
-
-    public void go_to_contact_book(View view) {
-        Intent intent = new Intent(this,ContactBook.class);
-        startActivity(intent);
     }
 
     private void set_up_camera_with_surface_view() {
@@ -184,7 +141,7 @@ public class QrScanner extends AppCompatActivity {
 
     private void found_qr_code(String data) {
         try {
-            new Qr_Add_Query().launchTask("http://35.165.40.110/qr_check", "username=" + URLEncoder.encode(data, "UTF-8"));
+            new Qr_Add_Query().launchTask("qr_check", "username=" + URLEncoder.encode(data, "UTF-8"));
         } catch (Exception e) {
 
         }
@@ -204,30 +161,7 @@ public class QrScanner extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new Qr_ADD().launchTask("http://35.165.40.110/qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
-                        } catch (Exception e) {
-
-                        }
-                    }
-                });
-        alertDialog.show();
-    }
-
-    private void alert_friend_request(String name) {
-        AlertDialog alertDialog = new AlertDialog.Builder(QrScanner.this).create();
-        alertDialog.setTitle("New Contact");
-        alertDialog.setMessage(name + " has added you. Would you like to add them back?");
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,"Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            new Qr_ADD().launchTask("http://35.165.40.110/qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
+                            new Qr_ADD().launchTask("qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
                         } catch (Exception e) {
 
                         }
@@ -257,35 +191,6 @@ public class QrScanner extends AppCompatActivity {
             } else {
                 GlobalAssets.create_alert(QrScanner.this,"Error",message);
             }
-        }
-
-        @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
-        }
-    }
-
-    private class Qr_ADD implements AsyncTaskCompleteListener<String> {
-
-        @Override
-        public void onTaskComplete(String result) {
-            JSONObject json_result = null;
-            String success = null, message = null;
-            try {
-                json_result = new JSONObject(result);
-                success = json_result.getString("success");
-                message = json_result.getString("message");
-            } catch (Exception e) {
-            }
-            if (success == null && message == null && result.equals("Unauthorized")) {
-                GlobalAssets.create_alert(QrScanner.this,"Not Authorized","Not Authorized");
-            } else if (success == null && message == null) {
-                GlobalAssets.create_alert(QrScanner.this,"Error","Something bad happen.");
-            } else if (success.equals("Yes")) {
-                Toast.makeText(QrScanner.this, message, Toast.LENGTH_SHORT).show();
-            } else
-                GlobalAssets.create_alert(QrScanner.this,"Error",message);
         }
 
         @Override

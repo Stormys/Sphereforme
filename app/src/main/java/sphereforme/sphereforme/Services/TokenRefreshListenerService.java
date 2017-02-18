@@ -25,7 +25,7 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token) {
         try {
-            new FCM_Update().launchTask("http://35.165.40.110/fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
+            new FCM_Update().launchTask("fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
         } catch (Exception e) {
 
         }

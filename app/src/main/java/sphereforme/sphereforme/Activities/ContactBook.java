@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import sphereforme.sphereforme.R;
 
-public class ContactBook extends AppCompatActivity {
+public class ContactBook extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

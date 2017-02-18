@@ -9,7 +9,7 @@ import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
 
-public class SettingsPage extends AppCompatActivity {
+public class SettingsPage extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,13 +18,14 @@ public class SettingsPage extends AppCompatActivity {
     }
 
     public void logout(View view) {
-        new LogoutTask().launchTask("http://35.165.40.110/logout","");
+        new LogoutTask().launchTask("logout","");
     }
 
     private class LogoutTask implements AsyncTaskCompleteListener<String> {
         @Override
         public void onTaskComplete(String result) {
             Intent intent = new Intent(SettingsPage.this, LoginPage.class);
+            finish();
             startActivity(intent);
         }
 

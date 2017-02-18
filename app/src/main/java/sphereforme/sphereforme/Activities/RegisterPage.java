@@ -51,7 +51,7 @@ public class RegisterPage extends AppCompatActivity {
 
         }
 
-        new SignupTask().launchTask("http://35.165.40.110/signup",urlParameters);
+        new SignupTask().launchTask("signup",urlParameters);
     }
 
     private class SignupTask implements AsyncTaskCompleteListener<String> {
