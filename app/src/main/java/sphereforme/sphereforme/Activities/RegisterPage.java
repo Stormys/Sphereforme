@@ -1,4 +1,4 @@
-package sphereforme.sphereforme;
+package sphereforme.sphereforme.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +9,11 @@ import android.widget.EditText;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+
+import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
+import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
+import sphereforme.sphereforme.Network.NetworkManager;
+import sphereforme.sphereforme.R;
 
 public class RegisterPage extends AppCompatActivity {
 
@@ -67,7 +72,7 @@ public class RegisterPage extends AppCompatActivity {
             } else if (success.equals("No") && message.equals("Username or email taken")) {
                 GlobalAssets.create_alert(RegisterPage.this,"Duplicate",message);
             } else if (success.equals("Yes") && message.equals("Account created successfully")) {
-                Intent intent = new Intent(RegisterPage.this, MainPage.class);
+                Intent intent = new Intent(RegisterPage.this, QrScanner.class);
                 finish();
                 startActivity(intent);
             } else {

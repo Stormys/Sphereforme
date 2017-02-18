@@ -1,4 +1,4 @@
-package sphereforme.sphereforme;
+package sphereforme.sphereforme.Network;
 
 /**
  * Created by julian on 1/21/17.

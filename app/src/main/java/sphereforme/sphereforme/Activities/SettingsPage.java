@@ -1,9 +1,13 @@
-package sphereforme.sphereforme;
+package sphereforme.sphereforme.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
+import sphereforme.sphereforme.Network.NetworkManager;
+import sphereforme.sphereforme.R;
 
 public class SettingsPage extends AppCompatActivity {
 
@@ -20,7 +24,6 @@ public class SettingsPage extends AppCompatActivity {
     private class LogoutTask implements AsyncTaskCompleteListener<String> {
         @Override
         public void onTaskComplete(String result) {
-            GlobalAssets.Global_Instance.clear_preferences();
             Intent intent = new Intent(SettingsPage.this, LoginPage.class);
             startActivity(intent);
         }

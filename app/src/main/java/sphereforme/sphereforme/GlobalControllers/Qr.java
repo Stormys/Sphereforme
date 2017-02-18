@@ -1,10 +1,7 @@
-package sphereforme.sphereforme;
+package sphereforme.sphereforme.GlobalControllers;
 
 import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -13,6 +10,11 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 
 import org.json.JSONObject;
+
+import sphereforme.sphereforme.Activities.LoginPage;
+import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
+import sphereforme.sphereforme.Network.NetworkManager;
+import sphereforme.sphereforme.R;
 
 /**
  * Created by julian on 1/24/17.
@@ -24,20 +26,24 @@ public class Qr {
     public static final int WIDTH = 200;
     public static final int HEIGHT = 200;
 
-    private String data = null;
-    private Bitmap bit_qr_map = null;
+    private static String data = null;
+    private static Bitmap bit_qr_map = null;
 
-    private Activity activity_to_modify = null;
+    private static LoginPage callback;
 
-    public Qr() {
+    public static void setBitmap(LoginPage cb) {
+        new Get_My_Qr().launchTask("my_qr","");
+        callback = cb;
     }
 
-    public void findBitmap(Activity temp) {
-        activity_to_modify = (Activity) temp;
-        new Get_My_Qr().launchTask("http://35.165.40.110/my_qr","");
+    public static void set_QR(Activity activity) {
+        View view = activity.findViewById(R.id.my_qr);
+        if (view != null) {
+            ((ImageView) view).setImageBitmap(bit_qr_map);
+        }
     }
 
-    private void encodeAsBitmap() {
+    private static void encodeAsBitmap() {
         BitMatrix result;
         try {
             result = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
@@ -58,15 +64,7 @@ public class Qr {
         bit_qr_map.setPixels(pixels, 0, w, 0, 0, w, h);
     }
 
-    private void set_QR_in_UI() {
-        View viewOBJ = activity_to_modify.findViewById(R.id.my_qr);
-        if (viewOBJ != null) {
-            ((ImageView) viewOBJ).setImageBitmap(bit_qr_map);
-        }
-        activity_to_modify = null;
-    }
-
-    private class Get_My_Qr implements AsyncTaskCompleteListener<String> {
+    private static class Get_My_Qr implements AsyncTaskCompleteListener<String> {
         @Override
         public void onTaskComplete(String result) {
             JSONObject json_result = null;
@@ -81,7 +79,7 @@ public class Qr {
             if (success.equals("Yes")) {
                 data = message;
                 encodeAsBitmap();
-                set_QR_in_UI();
+                callback.go_to_main_page();
             }
         }
 

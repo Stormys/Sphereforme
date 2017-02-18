@@ -1,15 +1,25 @@
-package sphereforme.sphereforme;
+package sphereforme.sphereforme.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import org.json.JSONObject;
 
 import java.net.HttpCookie;
+import java.net.URI;
 import java.net.URLEncoder;
+
+import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
+import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
+import sphereforme.sphereforme.Network.NetworkManager;
+import sphereforme.sphereforme.R;
+import sphereforme.sphereforme.Services.TokenRefreshListenerService;
+
+import static sphereforme.sphereforme.GlobalControllers.Qr.setBitmap;
 
 public class LoginPage extends AppCompatActivity {
 
@@ -21,16 +31,17 @@ public class LoginPage extends AppCompatActivity {
     }
 
     private void global_setup() {
-        if (GlobalAssets.Global_Instance == null) {
-            GlobalAssets.Global_Instance = new GlobalAssets(this);
-        }
+        GlobalAssets.start_cookie_manager(this);
 
-        GlobalAssets.Global_Instance.preferences_read();
-
-        for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().getCookies()){
-            if (cookie.getName().equals(GlobalAssets.Cookie_Session_NAME)) {
-                go_to_main_page();
+        //Check if user is logged in
+        try {
+            for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().get(new URI(NetworkManager.domain))) {
+                if (cookie.getName().equals("SessionToken")) {
+                    setBitmap(this);
+                }
             }
+        } catch (Exception e) {
+
         }
     }
 
@@ -50,7 +61,7 @@ public class LoginPage extends AppCompatActivity {
         } catch (Exception e) {
         }
 
-        new LoginTask().launchTask("http://35.165.40.110/login",urlParameters);
+        new LoginTask().launchTask("login",urlParameters);
     }
 
     public void go_to_signup(View view) {
@@ -58,7 +69,7 @@ public class LoginPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void go_to_main_page() {
+    public void go_to_main_page() {
         Intent i = new Intent(this, TokenRefreshListenerService.class);
         startService(i);
 
