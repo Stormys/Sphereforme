@@ -1,23 +1,16 @@
 package sphereforme.sphereforme.Activities;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.Toast;
 
 
 import com.google.android.gms.vision.CameraSource;
@@ -38,7 +31,8 @@ import sphereforme.sphereforme.R;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
-public class QrScanner extends BaseActivity {
+public class Home extends BaseActivity {
+    public static BaseActivity this_activity;
 
     private final int Camera_Permissions = 2;
 
@@ -50,6 +44,8 @@ public class QrScanner extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_scanner);
+
+        this_activity = this;
 
         cameraView = (SurfaceView)findViewById(R.id.camera_view);
         barcodeDetector = new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
@@ -110,7 +106,7 @@ public class QrScanner extends BaseActivity {
 
     private void requestCameraPermission() {
         final String[] permissions = new String[]{Manifest.permission.CAMERA};
-        ActivityCompat.requestPermissions(QrScanner.this, permissions, Camera_Permissions);
+        ActivityCompat.requestPermissions(Home.this, permissions, Camera_Permissions);
     }
 
     @Override
@@ -148,7 +144,7 @@ public class QrScanner extends BaseActivity {
     }
 
     private void alert_adding_user(String name) {
-        AlertDialog alertDialog = new AlertDialog.Builder(QrScanner.this).create();
+        AlertDialog alertDialog = new AlertDialog.Builder(Home.this).create();
         alertDialog.setTitle("New Contact");
         alertDialog.setMessage("Do you want to add " + name + "?");
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
@@ -183,13 +179,13 @@ public class QrScanner extends BaseActivity {
             } catch (Exception e) {
             }
             if (success == null && message == null && result.equals("Unauthorized")) {
-                GlobalAssets.create_alert(QrScanner.this,"Not Authorized","Not Authorized");
+                GlobalAssets.create_alert(Home.this,"Not Authorized","Not Authorized");
             } else if (success == null && message == null) {
-                GlobalAssets.create_alert(QrScanner.this,"Error","Something bad happen.");
+                GlobalAssets.create_alert(Home.this,"Error","Something bad happen.");
             } else if (success.equals("Yes")) {
                 alert_adding_user(message);
             } else {
-                GlobalAssets.create_alert(QrScanner.this,"Error",message);
+                GlobalAssets.create_alert(Home.this,"Error",message);
             }
         }
 

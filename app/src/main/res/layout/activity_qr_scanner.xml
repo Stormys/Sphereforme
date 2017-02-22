@@ -5,7 +5,7 @@
     android:id="@+id/activity_qr_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sphereforme.sphereforme.Activities.QrScanner">
+    tools:context="sphereforme.sphereforme.Activities.Home">
 
     <SurfaceView
         android:layout_width="match_parent"

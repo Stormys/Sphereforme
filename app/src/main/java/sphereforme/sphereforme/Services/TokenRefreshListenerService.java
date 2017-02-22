@@ -8,7 +8,9 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.net.URLEncoder;
 
+import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
+import sphereforme.sphereforme.Network.BasicNetworkManager;
 import sphereforme.sphereforme.Network.NetworkManager;
 
 /**
@@ -19,29 +21,15 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Julian", "Refreshed token: " + refreshedToken);
         sendRegistrationToServer(refreshedToken);
+        GlobalAssets.update_fcm_key(refreshedToken);
     }
 
     private void sendRegistrationToServer(String token) {
         try {
-            new FCM_Update().launchTask("fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
+            new BasicNetworkManager().launchTask("fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
         } catch (Exception e) {
 
-        }
-    }
-
-    private class FCM_Update implements AsyncTaskCompleteListener<String> {
-
-        @Override
-        public void onTaskComplete(String result) {
-
-        }
-
-        @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
         }
     }
 }

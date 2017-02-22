@@ -1,12 +1,9 @@
 package sphereforme.sphereforme.Activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,63 +16,51 @@ import java.net.URLEncoder;
 import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.NetworkManager;
-
-/**
- * Created by julian on 2/17/17.
- */
+import sphereforme.sphereforme.Services.OurBroadcastReceiver;
 
 public class BaseActivity extends AppCompatActivity {
+
     protected String scanned_qr_data;
-    private BroadcastReceiver receiver;
+    private OurBroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getStringExtra("client_message").equals("1")) {
-                    String s = intent.getStringExtra("Name");
-                    scanned_qr_data = intent.getStringExtra("Qr_Data");
-                    alert_friend_request(s);
-                }
-            }
-        };
+        receiver = new OurBroadcastReceiver(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        LocalBroadcastManager.getInstance(this).registerReceiver((receiver),
-                new IntentFilter("1")
-        );
+        IntentFilter filter = new IntentFilter(OurBroadcastReceiver.FRIEND_REQUEST);
+        registerReceiver(receiver,filter);
     }
 
     @Override
     protected void onStop() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        unregisterReceiver(receiver);
         super.onStop();
     }
 
     public void go_to_settings(View view) {
         Intent intent = new Intent(this,SettingsPage.class);
-        finish();
         startActivity(intent);
     }
 
     public void go_to_contact_book(View view) {
         Intent intent = new Intent(this,ContactBook.class);
-        finish();
         startActivity(intent);
     }
 
     public void hold_to_scan(View view) {
-        Intent intent = new Intent(this,QrScanner.class);
-        finish();
+        Intent intent = new Intent(this,Home.class);
         startActivity(intent);
     }
 
+    public void on_new_friend_request(String name, String qr_data) {
+        scanned_qr_data = qr_data;
+        alert_friend_request(name);
+    }
 
     private void alert_friend_request(String name) {
         AlertDialog alertDialog = new AlertDialog.Builder(BaseActivity.this).create();

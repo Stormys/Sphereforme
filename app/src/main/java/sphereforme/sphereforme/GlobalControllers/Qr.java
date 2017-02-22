@@ -2,6 +2,7 @@ package sphereforme.sphereforme.GlobalControllers;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -12,13 +13,10 @@ import com.google.zxing.common.BitMatrix;
 import org.json.JSONObject;
 
 import sphereforme.sphereforme.Activities.LoginPage;
+import sphereforme.sphereforme.Activities.Splash;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
-
-/**
- * Created by julian on 1/24/17.
- */
 
 public class Qr {
     public final static int WHITE = 0xFFFFFFFF;
@@ -29,9 +27,9 @@ public class Qr {
     private static String data = null;
     private static Bitmap bit_qr_map = null;
 
-    private static LoginPage callback;
+    private static Splash callback;
 
-    public static void setBitmap(LoginPage cb) {
+    public static void setBitmap(Splash cb) {
         new Get_My_Qr().launchTask("my_qr","");
         callback = cb;
     }
@@ -41,6 +39,11 @@ public class Qr {
         if (view != null) {
             ((ImageView) view).setImageBitmap(bit_qr_map);
         }
+    }
+
+    public static void setBitmap(String id) {
+        data = id;
+        encodeAsBitmap();
     }
 
     private static void encodeAsBitmap() {
@@ -73,13 +76,16 @@ public class Qr {
                 json_result = new JSONObject(result);
                 success = json_result.getString("success");
                 message = json_result.getString("message");
-            } catch (Exception e){
-            }
 
-            if (success.equals("Yes")) {
-                data = message;
-                encodeAsBitmap();
-                callback.go_to_main_page();
+                if (success.equals("Yes")) {
+                    data = message;
+                    encodeAsBitmap();
+                    callback.determine_where_to_go(true);
+                } else {
+                    callback.determine_where_to_go(false);
+                }
+            } catch (Exception e){
+                callback.determine_where_to_go(false);
             }
         }
 

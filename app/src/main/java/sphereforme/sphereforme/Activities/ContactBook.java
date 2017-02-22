@@ -1,5 +1,6 @@
 package sphereforme.sphereforme.Activities;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -11,11 +12,15 @@ import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
 
 public class ContactBook extends BaseActivity {
+    public static BaseActivity this_activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_book);
+
+        this_activity = this;
+
         new Get_Contact_Book().launchTask("my_contact_book","");
     }
 

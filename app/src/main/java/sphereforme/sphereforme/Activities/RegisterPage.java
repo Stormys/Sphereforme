@@ -72,7 +72,7 @@ public class RegisterPage extends AppCompatActivity {
             } else if (success.equals("No") && message.equals("Username or email taken")) {
                 GlobalAssets.create_alert(RegisterPage.this,"Duplicate",message);
             } else if (success.equals("Yes") && message.equals("Account created successfully")) {
-                Intent intent = new Intent(RegisterPage.this, QrScanner.class);
+                Intent intent = new Intent(RegisterPage.this, Home.class);
                 finish();
                 startActivity(intent);
             } else {

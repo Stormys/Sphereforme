@@ -3,8 +3,10 @@ package sphereforme.sphereforme.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
@@ -24,6 +26,13 @@ public class SettingsPage extends BaseActivity {
     private class LogoutTask implements AsyncTaskCompleteListener<String> {
         @Override
         public void onTaskComplete(String result) {
+            GlobalAssets.clear_all(SettingsPage.this);
+
+            if (Home.this_activity != null)
+                Home.this_activity.finish();
+            if (ContactBook.this_activity != null)
+               ContactBook.this_activity.finish();
+
             Intent intent = new Intent(SettingsPage.this, LoginPage.class);
             finish();
             startActivity(intent);
