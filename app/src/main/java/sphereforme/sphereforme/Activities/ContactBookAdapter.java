@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import sphereforme.sphereforme.R;
 
@@ -33,7 +34,11 @@ public class ContactBookAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return null;
+        try {
+            return list.getJSONObject(i);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

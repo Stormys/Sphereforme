@@ -1,7 +1,9 @@
 package sphereforme.sphereforme.GlobalControllers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -9,6 +11,9 @@ import android.util.Log;
 import java.net.CookieHandler;
 import java.net.CookiePolicy;
 
+import sphereforme.sphereforme.Activities.ContactBook;
+import sphereforme.sphereforme.Activities.Home;
+import sphereforme.sphereforme.Activities.LoginPage;
 import sphereforme.sphereforme.Network.PersistentCookieStore;
 
 public class GlobalAssets {
@@ -38,11 +43,11 @@ public class GlobalAssets {
         CookieHandler.setDefault(msCookieManager);
 
         FCM_Prefs = context.getSharedPreferences(FCM_KEYS_FILE,Context.MODE_PRIVATE);
+        SP = context.getSharedPreferences(My_Info_File,Context.MODE_PRIVATE);
     }
 
-    public static void clear_all(Context context) {
+    public static void clear_all() {
         msCookieManager.getCookieStore().removeAll();
-        SP = context.getSharedPreferences(My_Info_File,Context.MODE_PRIVATE);
         SP.edit().clear().apply();
     }
 
@@ -62,5 +67,20 @@ public class GlobalAssets {
 
     public static String get_fcm_key() {
         return FCM_Prefs.getString("FCM_Key","");
+    }
+
+    public static boolean is_user_logged_in() {
+        if (SP.getString("Username", "Not_Here").equals("Not_Here")) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void Logout() {
+        clear_all();
+        if (Home.this_activity != null)
+            Home.this_activity.finish();
+        if (ContactBook.this_activity != null)
+            ContactBook.this_activity.finish();
     }
 }

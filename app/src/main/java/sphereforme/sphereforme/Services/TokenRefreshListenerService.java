@@ -18,16 +18,21 @@ import sphereforme.sphereforme.Network.NetworkManager;
  */
 
 public class TokenRefreshListenerService extends FirebaseInstanceIdService {
+    public TokenRefreshListenerService() {
+        onTokenRefresh();
+    }
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        sendRegistrationToServer(refreshedToken);
+        Log.d("Julian","Token: " + refreshedToken);
+        if (GlobalAssets.is_user_logged_in())
+            sendRegistrationToServer(refreshedToken);
         GlobalAssets.update_fcm_key(refreshedToken);
     }
 
     private void sendRegistrationToServer(String token) {
         try {
-            new BasicNetworkManager().launchTask("fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
+            new BasicNetworkManager(getApplicationContext()).launchTask("fcm_add", "key=" + URLEncoder.encode(token, "UTF-8"));
         } catch (Exception e) {
 
         }

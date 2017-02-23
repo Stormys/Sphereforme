@@ -1,11 +1,15 @@
 package sphereforme.sphereforme.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
@@ -44,7 +48,7 @@ public class LoginPage extends AppCompatActivity {
         } catch (Exception e) {
         }
 
-        new LoginTask().launchTask("login",urlParameters);
+        new LoginTask(this).launchTask("login",urlParameters);
     }
 
     public void go_to_signup(View view) {
@@ -56,46 +60,29 @@ public class LoginPage extends AppCompatActivity {
         GlobalAssets.update_info(this,id, username);
 
         try {
-            new BasicNetworkManager().launchTask("fcm_add", "key=" + URLEncoder.encode(GlobalAssets.get_fcm_key(), "UTF-8"));
+            new BasicNetworkManager(this).launchTask("fcm_add", "key=" + URLEncoder.encode(GlobalAssets.get_fcm_key(), "UTF-8"));
         } catch (Exception e) {
         }
-
-        Intent i = new Intent(this, TokenRefreshListenerService.class);
-        startService(i);
 
         Intent intent = new Intent(this,Home.class);
         finish();
         startActivity(intent);
     }
 
-    private class LoginTask implements AsyncTaskCompleteListener<String> {
-
-        @Override
-        public void onTaskComplete(String result) {
-            JSONObject json_result = null;
-            String success = null, message = null;
-            try {
-                json_result = new JSONObject(result);
-                success = json_result.getString("success");
-                message = json_result.getString("message");
-            } catch (Exception e) {
-            }
-            if (success == null && message == null && result.equals("Unauthorized")) {
-                GlobalAssets.create_alert(LoginPage.this,"Bad Login","Username or password incorrect.");
-            } else if (success == null && message == null) {
-                GlobalAssets.create_alert(LoginPage.this,"Error","Something bad happen.");
-            } else if (success.equals("Yes")) {
-                setBitmap(username);
-                go_to_main_page(Integer.parseInt(message));
-            } else {
-                GlobalAssets.create_alert(LoginPage.this,"Error","Something bad happen.");
-            }
+    private class LoginTask extends AsyncTaskCompleteListener {
+        public LoginTask(Activity activity) {
+            super(activity);
         }
 
         @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
+        public void onSuccess() throws JSONException {
+            setBitmap(username);
+            go_to_main_page(NetworkConnection.data.getJSONObject(0).getInt("id"));
+        }
+
+        @Override
+        public void onUnAuthorized() {
+            GlobalAssets.create_alert(LoginPage.this,"Invalid Login","Username or password is incorrect.");
         }
     }
 }

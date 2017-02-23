@@ -1,5 +1,6 @@
 package sphereforme.sphereforme.Activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
@@ -76,7 +78,7 @@ public class BaseActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new Qr_ADD().launchTask("qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
+                            new Qr_ADD(BaseActivity.this).launchTask("qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
                         } catch (Exception e) {
 
                         }
@@ -85,32 +87,20 @@ public class BaseActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    protected class Qr_ADD implements AsyncTaskCompleteListener<String> {
+    protected class Qr_ADD extends AsyncTaskCompleteListener {
 
-        @Override
-        public void onTaskComplete(String result) {
-            JSONObject json_result = null;
-            String success = null, message = null;
-            try {
-                json_result = new JSONObject(result);
-                success = json_result.getString("success");
-                message = json_result.getString("message");
-            } catch (Exception e) {
-            }
-            if (success == null && message == null && result.equals("Unauthorized")) {
-                GlobalAssets.create_alert(BaseActivity.this,"Not Authorized","Not Authorized");
-            } else if (success == null && message == null) {
-                GlobalAssets.create_alert(BaseActivity.this,"Error","Something bad happen.");
-            } else if (success.equals("Yes")) {
-                Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
-            } else
-                GlobalAssets.create_alert(BaseActivity.this,"Error",message);
+        public Qr_ADD(Context activity) {
+            super(activity);
         }
 
         @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
+        public void onSuccess() {
+            Toast.makeText(BaseActivity.this, NetworkConnection.message, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFailure() {
+            GlobalAssets.create_alert(BaseActivity.this,"Error",NetworkConnection.message);
         }
     }
 }

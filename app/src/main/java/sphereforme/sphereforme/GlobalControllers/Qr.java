@@ -1,6 +1,7 @@
 package sphereforme.sphereforme.GlobalControllers;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
@@ -10,27 +11,27 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 
-import org.json.JSONObject;
+import org.json.JSONException;
 
-import sphereforme.sphereforme.Activities.LoginPage;
 import sphereforme.sphereforme.Activities.Splash;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
-import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
 
-public class Qr {
-    public final static int WHITE = 0xFFFFFFFF;
-    public final static int BLACK = 0xFF000000;
-    public static final int WIDTH = 200;
-    public static final int HEIGHT = 200;
+import static android.R.attr.data;
 
-    private static String data = null;
+public class Qr {
+    public final static int BACKGROUND = 0x00FFFFFF;
+    public final static int CODE = 0xFF0061A8;
+    public static final int WIDTH = 300;
+    public static final int HEIGHT = 300;
+
+    private static String qr_data = null;
     private static Bitmap bit_qr_map = null;
 
     private static Splash callback;
 
-    public static void setBitmap(Splash cb) {
-        new Get_My_Qr().launchTask("my_qr","");
+    public static void setBitmap(Splash cb,Context context) {
+        new Get_My_Qr(context).launchTask("my_qr","");
         callback = cb;
     }
 
@@ -42,14 +43,14 @@ public class Qr {
     }
 
     public static void setBitmap(String id) {
-        data = id;
+        qr_data = id;
         encodeAsBitmap();
     }
 
     private static void encodeAsBitmap() {
         BitMatrix result;
         try {
-            result = new MultiFormatWriter().encode(data, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
+            result = new MultiFormatWriter().encode(qr_data, BarcodeFormat.QR_CODE, WIDTH, HEIGHT, null);
         } catch (Exception e) {
             return;
         }
@@ -59,7 +60,7 @@ public class Qr {
         for (int y = 0; y < h; y++) {
             int offset = y * w;
             for (int x = 0; x < w; x++) {
-                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+                pixels[offset + x] = result.get(x, y) ? CODE : BACKGROUND;
             }
         }
 
@@ -67,32 +68,32 @@ public class Qr {
         bit_qr_map.setPixels(pixels, 0, w, 0, 0, w, h);
     }
 
-    private static class Get_My_Qr implements AsyncTaskCompleteListener<String> {
-        @Override
-        public void onTaskComplete(String result) {
-            JSONObject json_result = null;
-            String success = null, message = null;
-            try {
-                json_result = new JSONObject(result);
-                success = json_result.getString("success");
-                message = json_result.getString("message");
+    private static class Get_My_Qr extends AsyncTaskCompleteListener {
 
-                if (success.equals("Yes")) {
-                    data = message;
-                    encodeAsBitmap();
-                    callback.determine_where_to_go(true);
-                } else {
-                    callback.determine_where_to_go(false);
-                }
-            } catch (Exception e){
-                callback.determine_where_to_go(false);
-            }
+        public Get_My_Qr(Context activity) {
+            super(activity);
         }
 
         @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
+        public void onSuccess() throws JSONException {
+            qr_data = NetworkConnection.data.getJSONObject(0).getString("qr_data");
+            encodeAsBitmap();
+            callback.determine_where_to_go(true);
+        }
+
+        @Override
+        public void onError() {
+            callback.determine_where_to_go(false);
+        }
+
+        @Override
+        public void onFailure() {
+            callback.determine_where_to_go(false);
+        }
+
+        @Override
+        public void onUnAuthorized() {
+            callback.determine_where_to_go(false);
         }
     }
 }

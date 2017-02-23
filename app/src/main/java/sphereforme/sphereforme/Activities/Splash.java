@@ -3,6 +3,7 @@ package sphereforme.sphereforme.Activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.net.HttpCookie;
 import java.net.URI;
@@ -24,11 +25,14 @@ public class Splash extends AppCompatActivity {
     private void global_setup() {
         GlobalAssets.start_cookie_manager(this);
 
+        Intent i = new Intent(this, TokenRefreshListenerService.class);
+        startService(i);
+
         //Check if user is logged in
         try {
             for (HttpCookie cookie : GlobalAssets.msCookieManager.getCookieStore().get(new URI(NetworkManager.domain))) {
                 if (cookie.getName().equals("SessionToken")) {
-                    Qr.setBitmap(this);
+                    Qr.setBitmap(this,this.getApplicationContext());
                     return;
                 }
             }

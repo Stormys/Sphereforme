@@ -1,6 +1,7 @@
 package sphereforme.sphereforme.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -18,6 +19,8 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -137,7 +140,7 @@ public class Home extends BaseActivity {
 
     private void found_qr_code(String data) {
         try {
-            new Qr_Add_Query().launchTask("qr_check", "username=" + URLEncoder.encode(data, "UTF-8"));
+            new Qr_Add_Query(this).launchTask("qr_check", "username=" + URLEncoder.encode(data, "UTF-8"));
         } catch (Exception e) {
 
         }
@@ -157,7 +160,7 @@ public class Home extends BaseActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new Qr_ADD().launchTask("qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
+                            new Qr_ADD(Home.this).launchTask("qr_add", "username=" + URLEncoder.encode(scanned_qr_data, "UTF-8"));
                         } catch (Exception e) {
 
                         }
@@ -166,33 +169,18 @@ public class Home extends BaseActivity {
         alertDialog.show();
     }
 
-    private class Qr_Add_Query implements AsyncTaskCompleteListener<String> {
+    private class Qr_Add_Query extends AsyncTaskCompleteListener {
 
-        @Override
-        public void onTaskComplete(String result) {
-            JSONObject json_result = null;
-            String success = null, message = null;
-            try {
-                json_result = new JSONObject(result);
-                success = json_result.getString("success");
-                message = json_result.getString("message");
-            } catch (Exception e) {
-            }
-            if (success == null && message == null && result.equals("Unauthorized")) {
-                GlobalAssets.create_alert(Home.this,"Not Authorized","Not Authorized");
-            } else if (success == null && message == null) {
-                GlobalAssets.create_alert(Home.this,"Error","Something bad happen.");
-            } else if (success.equals("Yes")) {
-                alert_adding_user(message);
-            } else {
-                GlobalAssets.create_alert(Home.this,"Error",message);
-            }
+        public Qr_Add_Query(Context activity) {
+            super(activity);
         }
 
-        @Override
-        public void launchTask(String url, String urlParameters) {
-            NetworkManager NetworkConnection = new NetworkManager(this);
-            NetworkConnection.execute(url, urlParameters);
+        public void onSuccess() throws JSONException {
+            alert_adding_user(NetworkConnection.data.getJSONObject(0).getString("user_fullName"));
+        }
+
+        public void onFailure() {
+            GlobalAssets.create_alert(Home.this,"Error",NetworkConnection.message);
         }
     }
 
