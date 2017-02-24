@@ -30,8 +30,8 @@ public class Qr {
 
     private static Splash callback;
 
-    public static void setBitmap(Splash cb,Context context) {
-        new Get_My_Qr(context).launchTask("my_qr","");
+    public static void setBitmap(Splash cb) {
+        new Get_My_Qr(cb.getApplicationContext()).launchTask("my_qr","");
         callback = cb;
     }
 

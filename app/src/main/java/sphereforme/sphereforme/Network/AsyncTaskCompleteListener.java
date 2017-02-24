@@ -17,12 +17,9 @@ public abstract class AsyncTaskCompleteListener {
         Calling_Context = activity;
     }
 
-    public void onSuccess() throws JSONException{
-    }
+    public abstract void onSuccess() throws JSONException;
 
-    public void onFailure() {
-        GlobalAssets.create_alert(Calling_Context,"Error","Something bad happen.");
-    }
+    public abstract void onFailure() throws JSONException;
 
     public void onError() {
         GlobalAssets.create_alert(Calling_Context,"Error","Something bad happen.");

@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
+import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
@@ -51,6 +53,11 @@ public class ContactBook extends BaseActivity implements AdapterView.OnItemClick
             listView.setAdapter(adapter);
 
             listView.setOnItemClickListener(ContactBook.this);
+        }
+
+        @Override
+        public void onFailure() throws JSONException {
+            GlobalAssets.create_alert(ContactBook.this,"Failed",NetworkConnection.message);
         }
 
     }

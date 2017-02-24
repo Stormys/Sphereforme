@@ -81,6 +81,11 @@ public class LoginPage extends AppCompatActivity {
         }
 
         @Override
+        public void onFailure() throws JSONException {
+            GlobalAssets.create_alert(LoginPage.this,"Error","Something bad happen.");
+        }
+
+        @Override
         public void onUnAuthorized() {
             GlobalAssets.create_alert(LoginPage.this,"Invalid Login","Username or password is incorrect.");
         }

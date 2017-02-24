@@ -24,6 +24,7 @@ import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.OpenFileActivityBuilder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -151,6 +152,14 @@ public class SettingsPage extends BaseActivity implements GoogleApiClient.Connec
 
         @Override
         public void onSuccess() {
+            GlobalAssets.Logout();
+            Intent intent = new Intent(SettingsPage.this, LoginPage.class);
+            finish();
+            startActivity(intent);
+        }
+
+        @Override
+        public void onFailure() throws JSONException {
             GlobalAssets.Logout();
             Intent intent = new Intent(SettingsPage.this, LoginPage.class);
             finish();
