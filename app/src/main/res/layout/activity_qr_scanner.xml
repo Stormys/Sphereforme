@@ -5,46 +5,21 @@
     android:id="@+id/activity_qr_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="sphereforme.sphereforme.QrScanner">
+    tools:context="sphereforme.sphereforme.Activities.Home">
 
     <SurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/camera_view" />
 
-    <Button
-        android:text="Contacts"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button6"
-        android:onClick="go_to_contact_book"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/button2"
-        android:layout_marginEnd="22dp" />
-
-    <Button
-        android:text="Hold to Scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
-        android:onClick="hold_to_scan"
-        android:layout_marginEnd="119dp"
-        android:layout_alignBaseline="@+id/button6"
-        android:layout_alignBottom="@+id/button6"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:text="Settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button3"
-        android:onClick="go_to_settings"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignParentEnd="true" />
-
     <include layout="@layout/profile_overlay"
         android:id="@+id/profile_overlay"/>
+
+    <include layout="@layout/bottom_toolbar"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"></include>
 
 </RelativeLayout>

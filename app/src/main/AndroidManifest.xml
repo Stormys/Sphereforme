@@ -4,12 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <permission
         android:name="sphereforme.sphereforme.permission.PUSH_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission
-        android:name="sphereforme.sphereforme.permission.PUSH_MESSAGE" />
+    <uses-permission android:name="sphereforme.sphereforme.permission.PUSH_MESSAGE" />
 
     <meta-data
         android:name="com.google.android.gms.vision.DEPENDENCIES"
@@ -21,36 +21,43 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <service android:name=".TokenRefreshListenerService"
+        <service
+            android:name=".Services.TokenRefreshListenerService"
             android:exported="false">
-        <intent-filter>
-            <action android:name="com.google.firebase.INSTANCE_ID" />
-        </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID" />
+            </intent-filter>
         </service>
         <service
-            android:name=".NotificationsListenerService"
-            android:exported="false" >
+            android:name=".Services.NotificationsListenerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-
-
-
-        <activity android:name=".LoginPage">
+        <activity android:name=".Activities.LoginPage"></activity>
+        <activity android:name=".Activities.RegisterPage" />
+        <activity
+            android:name=".Activities.Home"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".Activities.SettingsPage"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".Activities.ContactBook"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".Activities.Splash"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainPage" />
-        <activity android:name=".RegisterPage" />
-        <activity android:name=".QrScanner" />
-        <activity android:name=".SettingsPage" />
-        <activity android:name=".ContactBook"></activity>
+        <activity
+            android:name=".Activities.ContactPage"/>
     </application>
 
 </manifest>

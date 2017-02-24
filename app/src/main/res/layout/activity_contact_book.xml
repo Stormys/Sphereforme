@@ -8,11 +8,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="sphereforme.sphereforme.ContactBook">
+    tools:context="sphereforme.sphereforme.Activities.ContactBook">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:id="@+id/table"
+        android:layout_marginRight="60dp"
+        android:layout_above="@+id/toolbar"
+        android:layout_alignParentEnd="true" />
+
+    <include layout="@layout/bottom_toolbar"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"></include>
 </RelativeLayout>
