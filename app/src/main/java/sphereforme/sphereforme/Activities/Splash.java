@@ -21,7 +21,7 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new Test().execute();
+        new Setup().execute();
 
         Intent i = new Intent(this, TokenRefreshListenerService.class);
         startService(i);
@@ -46,7 +46,7 @@ public class Splash extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class Test extends AsyncTask<Void,Void,Integer> {
+    private class Setup extends AsyncTask<Void,Void,Integer> {
 
         @Override
         protected Integer doInBackground(Void... voids) {

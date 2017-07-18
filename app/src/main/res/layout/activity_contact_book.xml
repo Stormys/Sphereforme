@@ -14,8 +14,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/table"
-        android:layout_marginRight="60dp"
         android:layout_above="@+id/toolbar"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/MeLabel"
         android:layout_alignParentEnd="true" />
 
     <include layout="@layout/bottom_toolbar"
@@ -24,4 +25,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"></include>
+
+    <TextView
+        android:id="@+id/MeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You"
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="ClickYou"
+        />
 </RelativeLayout>

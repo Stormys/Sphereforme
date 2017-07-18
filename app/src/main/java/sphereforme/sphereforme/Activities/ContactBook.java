@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
@@ -36,8 +37,18 @@ public class ContactBook extends BaseActivity implements AdapterView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Intent contact_page = new Intent(this,ContactPage.class);
-        contact_page.putExtra("Raw_Data", adapterView.getItemAtPosition(i).toString());
+        try {
+            new JSONObject(adapterView.getItemAtPosition(i).toString()).getInt("id");
+            contact_page.putExtra("Raw_friendId", "2");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         startActivity(contact_page);
+    }
+
+    public void ClickYou(View view) {
+        Intent intent = new Intent(this,YouPage.class);
+        startActivity(intent);
     }
 
     private class Get_Contact_Book extends AsyncTaskCompleteListener {

@@ -2,24 +2,21 @@ package sphereforme.sphereforme.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import sphereforme.sphereforme.GlobalControllers.GlobalAssets;
 import sphereforme.sphereforme.Network.AsyncTaskCompleteListener;
 import sphereforme.sphereforme.Network.BasicNetworkManager;
-import sphereforme.sphereforme.Network.NetworkManager;
 import sphereforme.sphereforme.R;
-import sphereforme.sphereforme.Services.TokenRefreshListenerService;
 
 import static sphereforme.sphereforme.GlobalControllers.Qr.setBitmap;
 
@@ -33,22 +30,7 @@ public class LoginPage extends AppCompatActivity {
     }
 
     public void login_submit(View view) {
-        username = ((EditText) findViewById(R.id.username)).getText().toString();
-        String password = ((EditText) findViewById(R.id.password)).getText().toString();
-
-        if (username.equals("") || password.equals("")) {
-            GlobalAssets.create_alert(this,"Empty Fields", "Fill all the fields.");
-            return;
-        }
-
-        String urlParameters = null;
-
-        try {
-            urlParameters = "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8");
-        } catch (Exception e) {
-        }
-
-        new LoginTask(this).launchTask("login",urlParameters);
+        new Create_Login_Request().execute();
     }
 
     public void go_to_signup(View view) {
@@ -88,6 +70,30 @@ public class LoginPage extends AppCompatActivity {
         @Override
         public void onUnAuthorized() {
             GlobalAssets.create_alert(LoginPage.this,"Invalid Login","Username or password is incorrect.");
+        }
+    }
+
+    private class Create_Login_Request extends AsyncTask<Void, Void, Boolean> {
+        private String password;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            if (username.equals("") || password.equals("")) {
+                GlobalAssets.create_alert(LoginPage.this,"Empty Fields", "Fill all the fields.");
+                return false;
+            }
+
+            try {
+                new LoginTask(LoginPage.this).launchTask("login", "username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            username = ((EditText) findViewById(R.id.username)).getText().toString();
+            password = ((EditText) findViewById(R.id.password)).getText().toString();
         }
     }
 }

@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="sphereforme.sphereforme.Activities.ImportBusinessCard">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="192dp"
+        android:text="Welcome kiddos" />
+
+    <Button
+        android:text="Import from Google Drive"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/import_google_drive"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="100dp"
+        android:onClick="onGoogleDrive"/>
+
+    <ImageView
+        android:layout_width="286dp"
+        android:layout_height="318dp"
+        android:id="@+id/pdfPreview"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="140dp" />
+
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/pdfPreview"
+        android:onClick="Send_File"
+        android:id="@+id/button5" />
+
+</RelativeLayout>

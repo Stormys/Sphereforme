@@ -24,7 +24,6 @@ public class TokenRefreshListenerService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Julian","Token: " + refreshedToken);
         if (GlobalAssets.is_user_logged_in())
             sendRegistrationToServer(refreshedToken);
         GlobalAssets.update_fcm_key(refreshedToken);

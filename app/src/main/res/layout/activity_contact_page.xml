@@ -1,15 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="sphereforme.sphereforme.Activities.ContactPage">
+    tools:context="sphereforme.sphereforme.Activities.ContactPage"
+    >
 
     <TextView
-        android:text="TextView"
-        android:layout_width="108dp"
+        android:id="@+id/NameHeader"
+        android:layout_width="85dp"
         android:layout_height="wrap_content"
-        android:id="@+id/raw_data" />
-</android.support.design.widget.CoordinatorLayout>
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
+
+    <TextView
+        android:id="@+id/NameLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="97dp"
+        android:layout_toEndOf="@+id/NameHeader"
+        android:allowUndo="false"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/EmailLoc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="97dp"
+        android:layout_below="@+id/NameLoc"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/EmailHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Email"
+        android:layout_alignBaseline="@+id/EmailLoc"
+        android:layout_alignBottom="@+id/EmailLoc"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
